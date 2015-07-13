@@ -1,0 +1,44 @@
+/*
+ * Copyright 2015 Agapsys Tecnologia Ltda-ME.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.agapsys.mail;
+
+import java.util.Properties;
+
+public enum SecurityType {
+	SSL,
+	TLS;
+	
+	Properties getProperties(SmtpSettings settings) {
+		Properties properties = new Properties();
+		
+		switch(this) {
+			case SSL:
+				properties.put("mail.smtp.socketFactory.port", String.format("%d", settings.getPort()));
+				properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				break;
+				
+			case TLS:
+				properties.put("mail.smtp.starttls.enable", "true");
+				break;
+				
+			default:
+				throw new UnsupportedOperationException("Unsupported value: " + this.name());
+		}
+		
+		return properties;
+	}
+}
