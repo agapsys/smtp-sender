@@ -32,25 +32,33 @@ public class SmtpSender {
 	private final Properties props;
 	private final Session session;
 	
+	public SmtpSender() {
+		this(new SmtpSettings());
+	}
+	
 	public SmtpSender(SmtpSettings smtpSettings) {
 		if (smtpSettings == null)
-			throw new IllegalArgumentException("Null/Empty smtpSettings");
+			throw new IllegalArgumentException("Null smtpSettings");
 		
 		this.smtpSettings = smtpSettings;
-		this.props = new Properties(smtpSettings.getProperties());
 		
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.host", smtpSettings);
+		this.props = new Properties();
+		props.put("mail.smtp.host", smtpSettings.getServer());
 		props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
+		props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
 		
-		this.session = Session.getInstance(props, 
-			new javax.mail.Authenticator() {
-				@Override
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(SmtpSender.this.smtpSettings.getUsername(), SmtpSender.this.smtpSettings.getPassword());
+		if (smtpSettings.isAuthenticationEnabled()) {
+			this.session = Session.getInstance(props, 
+				new javax.mail.Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(SmtpSender.this.smtpSettings.getUsername(), SmtpSender.this.smtpSettings.getPassword());
+					}
 				}
-			}
-		);
+			);
+		} else {
+			this.session = Session.getInstance(props);
+		}
 	}
 
 	public void sendMessage(Message message) throws MessagingException {

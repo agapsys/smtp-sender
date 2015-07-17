@@ -25,83 +25,173 @@ import java.util.Properties;
 public class SmtpSettings  {
 	//  CLASS SCOPE ============================================================
 	public static final String KEY_SERVER   = "com.agapsys.mail.server";
+	public static final String KEY_AUTH     = "com.agapsys.mail.auth";
 	public static final String KEY_USERNAME = "com.agapsys.mail.username";
 	public static final String KEY_PASSWORD = "com.agapsys.mail.password";
 	public static final String KEY_SECURITY = "com.agapsys.mail.security";
 	public static final String KEY_PORT     = "com.agapsys.mail.port";
+	
+	public static final String       DEFAULT_SERVER   = "localhost";
+	public static final boolean      DEFAULT_AUTH     = false;
+	public static final String       DEFAULT_USERNAME = "";
+	public static final String       DEFAULT_PASSWORD = "";
+	public static final SecurityType DEFAULT_SECURITY = SecurityType.NONE;
+	public static final int          DEFAULT_PORT     = 25;
 	// =========================================================================
 	
 	// INSTANCE SCOPE ==========================================================
-	private final Properties properties;
+	private String       server       = DEFAULT_SERVER;
+	private boolean      authenticate = DEFAULT_AUTH;
+	private String       username     = DEFAULT_USERNAME;
+	private String       password     = DEFAULT_PASSWORD;
+	private SecurityType securityType = DEFAULT_SECURITY;
+	private int          port         = DEFAULT_PORT;
 	
-	public SmtpSettings() {
-		properties = new Properties();
-	}
+	public SmtpSettings() {}
 	
 	public SmtpSettings(Properties properties) {
 		if (properties == null)
 			throw new IllegalArgumentException("Null properties");
 		
-		this.properties = properties;
+		String propVal;
+		
+		// Server ...
+		propVal = properties.getProperty(KEY_SERVER);
+		if (propVal == null) { 
+			server = DEFAULT_SERVER;
+		} else {
+			propVal = propVal.trim();
+			
+			if (propVal.isEmpty()) {
+				throw new IllegalArgumentException("Empty value for " + KEY_SERVER);
+			} else {
+				server = propVal;
+			}
+		}
+		
+		// Authenticate...
+		propVal = properties.getProperty(KEY_AUTH);
+		if (propVal == null) {
+			authenticate = DEFAULT_AUTH;
+		} else {
+			propVal = propVal.trim();
+			
+			if (propVal.isEmpty()) {
+				throw new IllegalArgumentException("Empty value for " + KEY_AUTH);
+			} else {
+				authenticate = Boolean.parseBoolean(propVal);
+			}
+		}
+		
+		// Username...
+		propVal = properties.getProperty(KEY_USERNAME);
+		if (propVal == null) {
+			username = DEFAULT_USERNAME;
+		} else {
+			username = propVal;
+		}
+		
+		// Password...
+		propVal = properties.getProperty(KEY_PASSWORD);
+		if (propVal == null) {
+			password = DEFAULT_PASSWORD;
+		} else {
+			password = propVal;
+		}
+		
+		// Security type...
+		propVal = properties.getProperty(KEY_SECURITY);
+		if (propVal == null) {
+			securityType = DEFAULT_SECURITY;
+		} else {
+			propVal = propVal.trim();
+			
+			if (propVal.isEmpty()) {
+				throw new IllegalArgumentException("Empty value for " + KEY_SECURITY);
+			} else {
+				securityType = SecurityType.valueOf(propVal);
+			}
+		}
+		
+		// Port...
+		propVal = properties.getProperty(KEY_PORT);
+		if (propVal == null) {
+			port = DEFAULT_PORT;
+		} else {
+			propVal = propVal.trim();
+			
+			if (propVal.isEmpty()) {
+				throw new IllegalArgumentException("Empty value for " + KEY_PORT);
+			} else {
+				try {
+					Integer propPort = Integer.parseInt(propVal);
+					if (propPort < 0 || propPort > 65536) {
+						throw new IllegalArgumentException(String.format("Invalid value for %s: %d", KEY_PORT, propPort));
+					} else {
+						port = propPort;
+					}
+				} catch (NumberFormatException ex) {
+					throw new IllegalArgumentException(String.format("Invalid value for %s: %s", KEY_PORT, propVal));
+				}
+			}
+		}
 	}
-	
-	public String getServer() {
-		return properties.getProperty(KEY_SERVER, "").trim();
+
+	public synchronized String getServer() {
+		return server;
 	}
-	public void setMailServer(String mailServer) {
-		if (mailServer == null || mailServer.trim().isEmpty())
+	public synchronized void setServer(String server) throws IllegalArgumentException {
+		if (server == null || server.trim().isEmpty())
 			throw new IllegalArgumentException("Null/empty mail server");
 		
-		properties.setProperty(KEY_SERVER, mailServer.trim());
+		this.server = server.trim();
 	}
 	
-	public int getPort() {
-		return (Integer) properties.getOrDefault(KEY_PORT, -1);
+	public synchronized int getPort() {
+		return port;
 	}
-	public void setPort(int port) {
+	public synchronized void setPort(int port) {
 		if (port < 0 || port > 65536)
 			throw new IllegalArgumentException(String.format("Invalid port: %d", port));
 		
-		properties.put(KEY_PORT, port);
+		this.port = port;
 	}
 	
-	public String getUsername() {
-		return properties.getProperty(KEY_USERNAME, null);
+	public synchronized String getUsername() {
+		return username;
 	}
-	public void setUsername(String username) {
-		if (username == null || username.isEmpty())
-			throw new IllegalArgumentException("Null/Empty username");
+	public synchronized void setUsername(String username) {
+		if (username == null)
+			throw new IllegalArgumentException("Null username");
 		
-		properties.put(KEY_USERNAME, username);
+		this.username = username;
 	}
 	
-	public String getPassword() {
-		return properties.getProperty(KEY_PASSWORD, null);
+	public synchronized String getPassword() {
+		return password;
 	}
-	public void setPassword(String password) {
-		if (password == null || password.isEmpty())
-			throw new IllegalArgumentException("Null/Empty password");
+	public synchronized void setPassword(String password) {
+		if (password == null)
+			throw new IllegalArgumentException("Null password");
 		
-		properties.put(KEY_PASSWORD, password);
+		this.password = password;
 	}
 	
-	public SecurityType getSecutiryType() {
-		String val = properties.getProperty(KEY_SECURITY, null);
-		
-		if (val == null)
-			return null;
-		
-		return SecurityType.valueOf(val.trim().toUpperCase());
+	public synchronized SecurityType getSecurityType() {
+		return securityType;
 	}
-	public void setSecurityType(SecurityType secutiryType) {
+	public synchronized void setSecurityType(SecurityType secutiryType) {
 		if (secutiryType == null)
 			throw new IllegalArgumentException("Null security type");
 		
-		properties.put(KEY_SECURITY, secutiryType.name().toLowerCase());
+		this.securityType = secutiryType;
 	}
 	
-	Properties getProperties() {
-		return properties;
+	public synchronized boolean isAuthenticationEnabled() {
+		return authenticate;
+	}
+	public synchronized void setAuthenticationEnabled(boolean enabled) {
+		this.authenticate = enabled;
 	}
 	// =========================================================================
 }

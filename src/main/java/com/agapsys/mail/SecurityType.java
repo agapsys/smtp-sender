@@ -20,7 +20,8 @@ import java.util.Properties;
 
 public enum SecurityType {
 	SSL,
-	TLS;
+	TLS,
+	NONE;
 	
 	Properties getProperties(SmtpSettings settings) {
 		Properties properties = new Properties();
@@ -33,6 +34,9 @@ public enum SecurityType {
 				
 			case TLS:
 				properties.put("mail.smtp.starttls.enable", "true");
+				break;
+				
+			case NONE:
 				break;
 				
 			default:
