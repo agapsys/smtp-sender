@@ -17,6 +17,7 @@
 package com.agapsys.mail;
 
 import java.util.Properties;
+import javax.mail.Authenticator;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -28,9 +29,8 @@ import javax.mail.internet.MimeMessage;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class SmtpSender {
-	private final SmtpSettings smtpSettings;
 	private final Properties props;
-	private final Session session;
+	private final Authenticator authenticator;
 	
 	public SmtpSender() {
 		this(new SmtpSettings());
@@ -39,29 +39,36 @@ public class SmtpSender {
 	public SmtpSender(SmtpSettings smtpSettings) {
 		if (smtpSettings == null)
 			throw new IllegalArgumentException("Null smtpSettings");
-		
-		this.smtpSettings = smtpSettings;
-		
+				
 		this.props = new Properties();
 		props.put("mail.smtp.host", smtpSettings.getServer());
 		props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
 		props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
+		smtpSettings.getSecurityType().updateProperties(smtpSettings, props);
+		
+		final String username = smtpSettings.getUsername();
+		final String password = smtpSettings.getPassword();
 		
 		if (smtpSettings.isAuthenticationEnabled()) {
-			this.session = Session.getInstance(props, 
-				new javax.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(SmtpSender.this.smtpSettings.getUsername(), SmtpSender.this.smtpSettings.getPassword());
-					}
+			authenticator = new Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
 				}
-			);
+			};
 		} else {
-			this.session = Session.getInstance(props);
+			authenticator = null;
 		}
 	}
 
 	public void sendMessage(Message message) throws MessagingException {
+		Session session;
+		if (authenticator != null) {
+			session = Session.getInstance(props, authenticator);
+		} else {
+			session = Session.getInstance(props);
+		}
+		
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		message.preSend(mimeMessage);

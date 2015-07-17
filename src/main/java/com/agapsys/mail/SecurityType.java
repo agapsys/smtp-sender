@@ -23,9 +23,7 @@ public enum SecurityType {
 	TLS,
 	NONE;
 	
-	Properties getProperties(SmtpSettings settings) {
-		Properties properties = new Properties();
-		
+	void updateProperties(SmtpSettings settings, Properties properties) {
 		switch(this) {
 			case SSL:
 				properties.put("mail.smtp.socketFactory.port", String.format("%d", settings.getPort()));
@@ -42,7 +40,5 @@ public enum SecurityType {
 			default:
 				throw new UnsupportedOperationException("Unsupported value: " + this.name());
 		}
-		
-		return properties;
 	}
 }
