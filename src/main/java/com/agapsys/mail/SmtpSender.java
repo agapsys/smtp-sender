@@ -69,10 +69,7 @@ public class SmtpSender {
 			session = Session.getInstance(props);
 		}
 		
-		MimeMessage mimeMessage = new MimeMessage(session);
-
-		message.preSend(mimeMessage);
-
+		MimeMessage mimeMessage = message.getMimeMessage(session);
 		Transport.send(mimeMessage);
 	}
 }

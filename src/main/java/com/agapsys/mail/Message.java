@@ -16,100 +16,67 @@
 
 package com.agapsys.mail;
 
+import java.util.Collections;
+import java.util.Set;
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * Represents a plain text message
+ * Represents an e-mail message.
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class Message {
-	private InternetAddress senderAddress;
-	private InternetAddress[] recipients;
-	private String subject;
-	private String text;
+	private final InternetAddress senderAddress;
+	private final Set<InternetAddress> recipients;
+	
+	private final String subject;
+	private final String text;
+	private final String charset;
+	private final String mimeType;
+	
+	Message(InternetAddress senderAddress, Set<InternetAddress> recipients, String subject, String text, String charset, String mimeType) {
+		this.senderAddress = senderAddress;
+		this.recipients = Collections.unmodifiableSet(recipients);
+		this.subject = subject;
+		this.text = text;
+		this.charset = charset;
+		this.mimeType = mimeType;
+	}
 	
 	public InternetAddress getSenderAddress() {
-		return this.senderAddress;
-	}
-	public void setSenderAddress(InternetAddress senderAddress) {
-		if (senderAddress == null)
-			throw new IllegalArgumentException("Null senderAddress");
-		
-		this.senderAddress = senderAddress;
-	}
-	public void setSenderAddress(String senderAddress) throws AddressException {
-		this.senderAddress = new InternetAddress(senderAddress);
+		return senderAddress;
 	}
 	
-	public InternetAddress[] getRecipients() {
-		return this.recipients;
-	}
-	public void setRecipients(InternetAddress...recipients) {
-		if (recipients.length == 0)
-			throw new IllegalArgumentException("Empty recipients");
-		
-		this.recipients = recipients;
-	}
-	public void setRecipients(String...recipients) throws AddressException {
-		if (recipients.length == 0)
-			throw new IllegalArgumentException("Empty recipients");
-
-		this.recipients = new InternetAddress[recipients.length];
-		for (int i = 0; i < recipients.length; i++) {
-			this.recipients[i] = new InternetAddress(recipients[i]);
-		}
+	public Set<InternetAddress> getRecipients() {
+		return recipients;
 	}
 	
 	public String getSubject() {
-		return this.subject;
+		return subject;
 	}
-	public void setSubject(String subject) {
-		if (subject == null)
-			subject = "";
-		
-		this.subject = subject;
-	}
-
+	
 	public String getText() {
-		return this.text;
-	}
-	public void setText(String text) {
-		if (text == null)
-			text = "";
-		
-		this.text = text;
+		return text;
 	}
 	
-	final void preSend(MimeMessage mimeMessage) throws MessagingException {
-		// Sender...
-		if (senderAddress == null)
-			throw new IllegalStateException("Missing sender address");
-
+	public String getCharset() {
+		return charset;
+	}
+	
+	public String getMimeType() {
+		return mimeType;
+	}
+	
+	MimeMessage getMimeMessage(Session session) throws MessagingException {
+		MimeMessage mimeMessage = new MimeMessage(session);
+		
 		mimeMessage.setFrom(senderAddress);
-
-		// Recipients...
-		if (recipients == null || recipients.length == 0)
-			throw new IllegalStateException("Missing recipients");
-
-		mimeMessage.setRecipients(javax.mail.Message.RecipientType.TO, recipients);
-
-		// Subject
-		if (subject == null)
-			subject = "";
-
+		mimeMessage.setRecipients(javax.mail.Message.RecipientType.TO, recipients.toArray(new InternetAddress[recipients.size()]));
 		mimeMessage.setSubject(subject);
-
-		// Text...
-		if (text == null)
-			text = "";
+		mimeMessage.setText(text, charset, mimeType);
 		
-		setMimeText(mimeMessage, text);
-	}
-	
-	void setMimeText(MimeMessage mimeMessage, String text) throws MessagingException {
-		mimeMessage.setText(text);
+		return mimeMessage;
 	}
 }
