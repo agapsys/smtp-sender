@@ -19,6 +19,7 @@ package com.agapsys.mail;
 import java.nio.charset.Charset;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 /**
@@ -26,36 +27,58 @@ import javax.mail.internet.InternetAddress;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class MessageBuilder {
+	// CLASS SCOPE =============================================================
+	private static InternetAddress[] getRecipients(String...recipients) throws AddressException {
+		InternetAddress[] array = new InternetAddress[recipients.length];
+		
+		int i = 0;
+		for (String recipient : recipients) {
+			if (recipient == null || recipient.trim().isEmpty())
+				throw new AddressException("Null/Empty address at index " + i);
+			
+			InternetAddress tmpRecipient = new InternetAddress(recipient.trim());
+			array[i] = tmpRecipient;
+			i++;
+		}
+		
+		return array;
+	}
+	
+	private static InternetAddress getAddress(String address) throws AddressException {
+		if (address == null || address.trim().isEmpty())
+				throw new AddressException("Null/Empty address");
+			
+		return new InternetAddress(address.trim());
+	}
+	//==========================================================================
+	
+	// INSTANCE SCOPE ==========================================================
 	private final InternetAddress senderAddress;
 	private final Set<InternetAddress> recipients = new LinkedHashSet<>();
 	
 	private String subject  = null;
 	private String text     = null;
 	private String charset = null;
-	private String mimeType = null;
+	private String mimeSubtype = null;
 	
 	public MessageBuilder(InternetAddress senderAddress, InternetAddress...recipients) {
-		if (senderAddress == null)
-			throw new IllegalArgumentException("senderAddress == null");
+		this.senderAddress = new ReadOnlyInternetAddress(senderAddress);
 		
 		if (recipients.length == 0)
 			throw new IllegalArgumentException("Empty recipients");
 		
-		this.senderAddress = new ReadOnlyInternetAddress(senderAddress);
-		
-		int i = 0;
 		for (InternetAddress recipient : recipients) {
-			if (recipient == null)
-				throw new IllegalArgumentException("Null recipient at index " + i);
-			
 			InternetAddress tmpRecipient = new ReadOnlyInternetAddress(recipient);
 			
 			if (this.recipients.contains(tmpRecipient))
 				throw new IllegalArgumentException("Dupplicate recipient: " + recipient.toString());
 			
 			this.recipients.add(tmpRecipient);
-			i++;
 		}
+	}
+	
+	public MessageBuilder(String senderAddress, String...recipients) throws AddressException {
+		this(getAddress(senderAddress), getRecipients(recipients));
 	}
 	
 	public MessageBuilder setSubject(String subject) {
@@ -91,14 +114,14 @@ public class MessageBuilder {
 		return this;
 	}
 
-	public MessageBuilder setMimeType(String mimeType) {
-		if (this.mimeType != null)
+	public MessageBuilder setMimeSubtype(String subtype) {
+		if (this.mimeSubtype != null)
 			throw new IllegalStateException("MIME type is already set");
 		
-		if (mimeType == null || mimeType.trim().isEmpty())
-			throw new IllegalArgumentException("Null/Empty mimeType");
+		if (subtype == null || subtype.trim().isEmpty())
+			throw new IllegalArgumentException("Null/Empty subtype");
 		
-		this.mimeType = mimeType;
+		this.mimeSubtype = subtype;
 		return this;
 	}
 	
@@ -112,9 +135,10 @@ public class MessageBuilder {
 		if (charset == null)
 			charset = Charset.defaultCharset().name();
 		
-		if (mimeType == null)
-			mimeType = "text/plain";
+		if (mimeSubtype == null)
+			mimeSubtype = "plain";
 		
-		return new Message(senderAddress, recipients, subject, text, charset, mimeType);
+		return new Message(senderAddress, recipients, subject, text, charset, mimeSubtype);
 	}
+	// =========================================================================
 }

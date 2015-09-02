@@ -34,15 +34,15 @@ public class Message {
 	private final String subject;
 	private final String text;
 	private final String charset;
-	private final String mimeType;
+	private final String mimeSubtype;
 	
-	Message(InternetAddress senderAddress, Set<InternetAddress> recipients, String subject, String text, String charset, String mimeType) {
+	Message(InternetAddress senderAddress, Set<InternetAddress> recipients, String subject, String text, String charset, String mimeSubtype) {
 		this.senderAddress = senderAddress;
 		this.recipients = Collections.unmodifiableSet(recipients);
 		this.subject = subject;
 		this.text = text;
 		this.charset = charset;
-		this.mimeType = mimeType;
+		this.mimeSubtype = mimeSubtype;
 	}
 	
 	public InternetAddress getSenderAddress() {
@@ -65,8 +65,12 @@ public class Message {
 		return charset;
 	}
 	
-	public String getMimeType() {
-		return mimeType;
+	public String getMimeSubtype() {
+		return mimeSubtype;
+	}
+	
+	public String getMime() {
+		return "text/" + mimeSubtype;
 	}
 	
 	MimeMessage getMimeMessage(Session session) throws MessagingException {
@@ -75,7 +79,7 @@ public class Message {
 		mimeMessage.setFrom(senderAddress);
 		mimeMessage.setRecipients(javax.mail.Message.RecipientType.TO, recipients.toArray(new InternetAddress[recipients.size()]));
 		mimeMessage.setSubject(subject);
-		mimeMessage.setText(text, charset, mimeType);
+		mimeMessage.setText(text, charset, mimeSubtype);
 		
 		return mimeMessage;
 	}
