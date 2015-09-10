@@ -2,7 +2,7 @@
 
 Welcome to the SMTP Sender project.
 
-**Attention:** If you obtained the source from a snapshot branch be aware that such branch can contain unstable code.
+**Attention:** If you obtained the source from a *development* branch be aware that such branch can contain unstable and/or uncompilable code.
 
 ## Compiling
 
@@ -14,11 +14,11 @@ SMTP Sender project requires Java 7 compatible runtime and depends on the follow
 
 * JavaMail API
 
-(for detailed information on external dependencies please see pom.xml)
+For detailed information on external dependencies please see *pom.xml*.
 
 ## Licensing
 
-SMTP Sender project is licensed under the Apache License 2.0. See the files called LICENSE and NOTICE for more information.
+SMTP Sender project is licensed under the **Apache License 2.0**. See the files called *LICENSE* and *NOTICE* for more information.
 
 ## Contact
 
