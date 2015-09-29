@@ -24,12 +24,12 @@ import java.util.Properties;
  */
 public class SmtpSettings  {
 	//  CLASS SCOPE ============================================================
-	public static final String KEY_SERVER   = "com.agapsys.mail.server";
-	public static final String KEY_AUTH     = "com.agapsys.mail.auth";
-	public static final String KEY_USERNAME = "com.agapsys.mail.username";
-	public static final String KEY_PASSWORD = "com.agapsys.mail.password";
-	public static final String KEY_SECURITY = "com.agapsys.mail.security";
-	public static final String KEY_PORT     = "com.agapsys.mail.port";
+	public static final String KEY_SERVER   = "agapsys.mail.server";
+	public static final String KEY_AUTH     = "agapsys.mail.auth";
+	public static final String KEY_USERNAME = "agapsys.mail.username";
+	public static final String KEY_PASSWORD = "agapsys.mail.password";
+	public static final String KEY_SECURITY = "agapsys.mail.security";
+	public static final String KEY_PORT     = "agapsys.mail.port";
 	
 	public static final String       DEFAULT_SERVER   = "localhost";
 	public static final boolean      DEFAULT_AUTH     = false;
