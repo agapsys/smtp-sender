@@ -32,7 +32,8 @@ public class SmtpSenderTest {
 	public static final String KEY_SUBJECT      = "agapsys.mail.subject";
 	public static final String KEY_TEXT         = "agapsys.mail.text";
 	public static final String KEY_MIME_SUBTYPE = "agapsys.mail.mimeSubtype";
-	public static final String KEY_CHARSET      = "agapsys.mail.charset";	
+	public static final String KEY_CHARSET      = "agapsys.mail.charset";
+	public static final String KEY_IGNORE_TEST  = "agapsys.mail.ignoreTest";
 	
 	public static final String RECIPIENT_DELIMITER = ",";
 	
@@ -48,6 +49,7 @@ public class SmtpSenderTest {
 	private final String       text;
 	private final String       mime;
 	private final String       charset;
+	private final boolean      ignoreTest;
 	
 	private void throwMissingProperty(String key) {
 		throw new IllegalStateException("Missing property: " + key);
@@ -111,14 +113,25 @@ public class SmtpSenderTest {
 				throwMissingProperty(KEY_CHARSET);
 			
 			charset = property.trim();
+			
+			// Ignore test...
+			property = props.getProperty(KEY_IGNORE_TEST);
+			if (property == null || property.trim().isEmpty())
+				throwMissingProperty(KEY_IGNORE_TEST);
+			
+			ignoreTest = Boolean.parseBoolean(property.trim());
 		}
 	}
 	
 	@Test
 	public void sendMessage() throws AddressException, MessagingException {
-		SmtpSender smtpSender = new SmtpSender(settings);
-		Message message = new MessageBuilder(sender, recipients).setMimeSubtype(mime).setCharset(charset).setSubject(subject).setText(text).build();
-		smtpSender.sendMessage(message);
+		if (!ignoreTest) {
+			SmtpSender smtpSender = new SmtpSender(settings);
+			Message message = new MessageBuilder(sender, recipients).setMimeSubtype(mime).setCharset(charset).setSubject(subject).setText(text).build();
+			smtpSender.sendMessage(message);
+		} else {
+			System.out.println("=== WARNING: Test was ignored in settings ===");
+		}
 	}
 	// =========================================================================
 }
