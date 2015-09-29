@@ -27,12 +27,12 @@ import org.junit.Test;
 
 public class SmtpSenderTest {
 	// CLASS SCOPE =============================================================
-	public static final String KEY_SENDER       = "com.agapsys.mail.sender";
-	public static final String KEY_RECIPIENTS   = "com.agapsys.mail.recipients";
-	public static final String KEY_SUBJECT      = "com.agapsys.mail.subject";
-	public static final String KEY_TEXT         = "com.agapsys.mail.text";
-	public static final String KEY_MIME_SUBTYPE = "com.agapsys.mail.mimeSubtype";
-	public static final String KEY_CHARSET      = "com.agapsys.mail.charset";	
+	public static final String KEY_SENDER       = "agapsys.mail.sender";
+	public static final String KEY_RECIPIENTS   = "agapsys.mail.recipients";
+	public static final String KEY_SUBJECT      = "agapsys.mail.subject";
+	public static final String KEY_TEXT         = "agapsys.mail.text";
+	public static final String KEY_MIME_SUBTYPE = "agapsys.mail.mimeSubtype";
+	public static final String KEY_CHARSET      = "agapsys.mail.charset";	
 	
 	public static final String RECIPIENT_DELIMITER = ",";
 	
