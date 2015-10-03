@@ -83,4 +83,17 @@ public class Message {
 		
 		return mimeMessage;
 	}
+
+	@Override
+	public String toString() {
+		return String.format(
+			"Mime: %s\nCharset: %s\nSender: %s\nRecipients: %s\nSubject: %s\nMessage:\n\n%s",
+			getMime(),
+			getCharset(),
+			getSenderAddress(),
+			getRecipients(),
+			getSubject(),
+			getText()
+		);
+	}
 }
