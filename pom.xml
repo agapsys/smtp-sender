@@ -61,34 +61,20 @@ limitations under the License.
 	</organization>
 	
 	<dependencies>
-		<!-- BEGIN: Compile dependencies -->
+		<!-- Compile dependencies -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.4</version>
 			<scope>compile</scope>
 		</dependency>
-		<!-- END Compile dependencies -->
 		
-		<!-- BEGIN: Test dependencies -->
-		<dependency>
-			<groupId>dumbster</groupId>
-			<artifactId>dumbster</artifactId>
-			<version>1.6</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- END Test dependencies -->
 	</dependencies>
 </project>
