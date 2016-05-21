@@ -31,29 +31,29 @@ import javax.mail.internet.MimeMessage;
 public class SmtpSender {
 	private final Properties props;
 	private final Authenticator authenticator;
-	
+
 	public SmtpSender() {
 		this(new SmtpSettings());
 	}
-	
+
 	public SmtpSender(SmtpSettings smtpSettings) {
 		if (smtpSettings == null)
 			throw new IllegalArgumentException("Null smtpSettings");
-				
+
 		this.props = new Properties();
 		props.put("mail.smtp.host", smtpSettings.getServer());
 		props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
 		props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
 		smtpSettings.getSecurityType().updateProperties(smtpSettings, props);
-		
+
 		final String username = smtpSettings.getUsername();
-		final String password = smtpSettings.getPassword();
-		
+		final char[] password = smtpSettings.getPassword();
+
 		if (smtpSettings.isAuthenticationEnabled()) {
 			authenticator = new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
+					return new PasswordAuthentication(username, new String(password));
 				}
 			};
 		} else {
@@ -68,7 +68,7 @@ public class SmtpSender {
 		} else {
 			session = Session.getInstance(props);
 		}
-		
+
 		MimeMessage mimeMessage = message.getMimeMessage(session);
 		Transport.send(mimeMessage);
 	}
