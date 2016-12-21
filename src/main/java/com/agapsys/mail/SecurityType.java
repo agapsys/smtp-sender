@@ -23,7 +23,7 @@ public enum SecurityType {
 	TLS,
 	NONE;
 	
-	void updateProperties(SmtpSettings settings, Properties properties) {
+	void _updateProperties(SmtpSettings settings, Properties properties) {
 		switch(this) {
 			case SSL:
 				properties.put("mail.smtp.socketFactory.port", String.format("%d", settings.getPort()));

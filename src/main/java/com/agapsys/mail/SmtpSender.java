@@ -44,7 +44,7 @@ public class SmtpSender {
 		props.put("mail.smtp.host", smtpSettings.getServer());
 		props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
 		props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
-		smtpSettings.getSecurityType().updateProperties(smtpSettings, props);
+		smtpSettings.getSecurityType()._updateProperties(smtpSettings, props);
 
 		final String username = smtpSettings.getUsername();
 		final char[] password = smtpSettings.getPassword();
