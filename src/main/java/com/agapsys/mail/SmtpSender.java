@@ -26,7 +26,6 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * Mail sender
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class SmtpSender {
 	private final Properties props;

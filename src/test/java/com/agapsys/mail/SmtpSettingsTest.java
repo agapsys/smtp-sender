@@ -19,9 +19,6 @@ import java.util.Properties;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-/**
- * @author Leandro Oliveira (leandro@agapsys.com)
- */
 public class SmtpSettingsTest {
 
 	@Test

@@ -20,7 +20,6 @@ import java.util.Properties;
 
 /**
  * SMTP Settings
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class SmtpSettings  {
 	//  CLASS SCOPE ============================================================
