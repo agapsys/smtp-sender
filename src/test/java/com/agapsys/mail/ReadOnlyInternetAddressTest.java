@@ -22,24 +22,24 @@ import javax.mail.internet.InternetAddress;
 import org.junit.Test;
 
 public class ReadOnlyInternetAddressTest {
-	private final InternetAddress address;
+    private final InternetAddress address;
 
-	public ReadOnlyInternetAddressTest() throws AddressException {
-		this.address = new ReadOnlyInternetAddress(new InternetAddress("User <user@host.com>"));
-	}
-	
-	@Test(expected = UnsupportedOperationException.class)
-	public void setPersonal() throws UnsupportedEncodingException {
-		address.setPersonal("test");
-	}
-	
-	@Test(expected = UnsupportedOperationException.class)
-	public void setPersonal1() throws UnsupportedEncodingException {
-		address.setPersonal("test", "utf-8");
-	}
-	
-	@Test(expected = UnsupportedOperationException.class)
-	public void setAddress() {
-		address.setAddress("test@host.com");
-	}
+    public ReadOnlyInternetAddressTest() throws AddressException {
+        this.address = new ReadOnlyInternetAddress(new InternetAddress("User <user@host.com>"));
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void setPersonal() throws UnsupportedEncodingException {
+        address.setPersonal("test");
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void setPersonal1() throws UnsupportedEncodingException {
+        address.setPersonal("test", "utf-8");
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void setAddress() {
+        address.setAddress("test@host.com");
+    }
 }

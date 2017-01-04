@@ -21,88 +21,88 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 class ReadOnlyInternetAddress extends InternetAddress {
-	private final InternetAddress wrappedInstance;
-	
-	public ReadOnlyInternetAddress(InternetAddress wrappedInstance) {
-		if (wrappedInstance == null)
-			throw new IllegalArgumentException("Wrapped instance cannot be null");
-		
-		this.wrappedInstance = wrappedInstance;
-	}
-	
-	// Blocked methods ---------------------------------------------------------
-	private void raiseError() {
-		throw new UnsupportedOperationException("Instance is read-only");
-	}
-	
-	@Override
-	public void setPersonal(String name) throws UnsupportedEncodingException {
-		raiseError();
-	}
+    private final InternetAddress wrappedInstance;
+    
+    public ReadOnlyInternetAddress(InternetAddress wrappedInstance) {
+        if (wrappedInstance == null)
+            throw new IllegalArgumentException("Wrapped instance cannot be null");
+        
+        this.wrappedInstance = wrappedInstance;
+    }
+    
+    // Blocked methods ---------------------------------------------------------
+    private void raiseError() {
+        throw new UnsupportedOperationException("Instance is read-only");
+    }
+    
+    @Override
+    public void setPersonal(String name) throws UnsupportedEncodingException {
+        raiseError();
+    }
 
-	@Override
-	public void setPersonal(String name, String charset) throws UnsupportedEncodingException {
-		raiseError();
-	}
+    @Override
+    public void setPersonal(String name, String charset) throws UnsupportedEncodingException {
+        raiseError();
+    }
 
-	@Override
-	public void setAddress(String address) {
-		raiseError();
-	}
-	 // ------------------------------------------------------------------------
-	
-	@Override
-	public InternetAddress[] getGroup(boolean strict) throws AddressException {
-		return wrappedInstance.getGroup(strict);
-	}
+    @Override
+    public void setAddress(String address) {
+        raiseError();
+    }
+     // ------------------------------------------------------------------------
+    
+    @Override
+    public InternetAddress[] getGroup(boolean strict) throws AddressException {
+        return wrappedInstance.getGroup(strict);
+    }
 
-	@Override
-	public boolean isGroup() {
-		return wrappedInstance.isGroup();
-	}
+    @Override
+    public boolean isGroup() {
+        return wrappedInstance.isGroup();
+    }
 
-	@Override
-	public void validate() throws AddressException {
-		wrappedInstance.validate();
-	}
+    @Override
+    public void validate() throws AddressException {
+        wrappedInstance.validate();
+    }
 
-	@Override
-	public int hashCode() {
-		return wrappedInstance.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return wrappedInstance.hashCode();
+    }
 
-	@Override
-	public boolean equals(Object a) {
-		return wrappedInstance.equals(a);
-	}
+    @Override
+    public boolean equals(Object a) {
+        return wrappedInstance.equals(a);
+    }
 
-	@Override
-	public String toUnicodeString() {
-		return wrappedInstance.toUnicodeString();
-	}
+    @Override
+    public String toUnicodeString() {
+        return wrappedInstance.toUnicodeString();
+    }
 
-	@Override
-	public String toString() {
-		return wrappedInstance.toString();
-	}
+    @Override
+    public String toString() {
+        return wrappedInstance.toString();
+    }
 
-	@Override
-	public String getPersonal() {
-		return wrappedInstance.getPersonal();
-	}
+    @Override
+    public String getPersonal() {
+        return wrappedInstance.getPersonal();
+    }
 
-	@Override
-	public String getAddress() {
-		return wrappedInstance.getAddress();
-	}
+    @Override
+    public String getAddress() {
+        return wrappedInstance.getAddress();
+    }
 
-	@Override
-	public String getType() {
-		return wrappedInstance.getType();
-	}
+    @Override
+    public String getType() {
+        return wrappedInstance.getType();
+    }
 
-	@Override
-	public Object clone() {
-		return wrappedInstance.clone();
-	}
+    @Override
+    public Object clone() {
+        return wrappedInstance.clone();
+    }
 }

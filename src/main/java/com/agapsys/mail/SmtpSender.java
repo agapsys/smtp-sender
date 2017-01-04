@@ -28,48 +28,48 @@ import javax.mail.internet.MimeMessage;
  * Mail sender
  */
 public class SmtpSender {
-	private final Properties props;
-	private final Authenticator authenticator;
+    private final Properties props;
+    private final Authenticator authenticator;
 
-	public SmtpSender() {
-		this(new SmtpSettings());
-	}
+    public SmtpSender() {
+        this(new SmtpSettings());
+    }
 
-	public SmtpSender(SmtpSettings smtpSettings) {
-		if (smtpSettings == null)
-			throw new IllegalArgumentException("Null smtpSettings");
+    public SmtpSender(SmtpSettings smtpSettings) {
+        if (smtpSettings == null)
+            throw new IllegalArgumentException("Null smtpSettings");
 
-		this.props = new Properties();
-		props.put("mail.smtp.host", smtpSettings.getServer());
-		props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
-		props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
-		smtpSettings.getSecurityType()._updateProperties(smtpSettings, props);
+        this.props = new Properties();
+        props.put("mail.smtp.host", smtpSettings.getServer());
+        props.put("mail.smtp.port", String.format("%d", smtpSettings.getPort()));
+        props.put("mail.smtp.auth", smtpSettings.isAuthenticationEnabled() ? "true" : "false");
+        smtpSettings.getSecurityType()._updateProperties(smtpSettings, props);
 
-		final String username = smtpSettings.getUsername();
-		final char[] password = smtpSettings.getPassword();
+        final String username = smtpSettings.getUsername();
+        final char[] password = smtpSettings.getPassword();
 
-		if (smtpSettings.isAuthenticationEnabled()) {
-			authenticator = new Authenticator() {
-				@Override
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, new String(password));
-				}
-			};
-		} else {
-			authenticator = null;
-		}
-	}
+        if (smtpSettings.isAuthenticationEnabled()) {
+            authenticator = new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, new String(password));
+                }
+            };
+        } else {
+            authenticator = null;
+        }
+    }
 
-	public void sendMessage(Message message) throws MessagingException {
-		Session session;
-		if (authenticator != null) {
-			session = Session.getInstance(props, authenticator);
-		} else {
-			session = Session.getInstance(props);
-		}
+    public void sendMessage(Message message) throws MessagingException {
+        Session session;
+        if (authenticator != null) {
+            session = Session.getInstance(props, authenticator);
+        } else {
+            session = Session.getInstance(props);
+        }
 
-		MimeMessage mimeMessage = message.getMimeMessage(session);
-		Transport.send(mimeMessage);
-	}
+        MimeMessage mimeMessage = message.getMimeMessage(session);
+        Transport.send(mimeMessage);
+    }
 }
 

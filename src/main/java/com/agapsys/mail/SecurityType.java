@@ -19,26 +19,26 @@ package com.agapsys.mail;
 import java.util.Properties;
 
 public enum SecurityType {
-	SSL,
-	TLS,
-	NONE;
-	
-	void _updateProperties(SmtpSettings settings, Properties properties) {
-		switch(this) {
-			case SSL:
-				properties.put("mail.smtp.socketFactory.port", String.format("%d", settings.getPort()));
-				properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-				break;
-				
-			case TLS:
-				properties.put("mail.smtp.starttls.enable", "true");
-				break;
-				
-			case NONE:
-				break;
-				
-			default:
-				throw new UnsupportedOperationException("Unsupported value: " + this.name());
-		}
-	}
+    SSL,
+    TLS,
+    NONE;
+    
+    void _updateProperties(SmtpSettings settings, Properties properties) {
+        switch(this) {
+            case SSL:
+                properties.put("mail.smtp.socketFactory.port", String.format("%d", settings.getPort()));
+                properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                break;
+                
+            case TLS:
+                properties.put("mail.smtp.starttls.enable", "true");
+                break;
+                
+            case NONE:
+                break;
+                
+            default:
+                throw new UnsupportedOperationException("Unsupported value: " + this.name());
+        }
+    }
 }

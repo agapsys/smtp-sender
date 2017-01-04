@@ -26,112 +26,112 @@ import javax.mail.internet.AddressException;
 import org.junit.Test;
 
 public class SmtpSenderTest {
-	// CLASS SCOPE =============================================================
-	public static final String KEY_SENDER       = "agapsys.mail.sender";
-	public static final String KEY_RECIPIENTS   = "agapsys.mail.recipients";
-	public static final String KEY_SUBJECT      = "agapsys.mail.subject";
-	public static final String KEY_TEXT         = "agapsys.mail.text";
-	public static final String KEY_MIME_SUBTYPE = "agapsys.mail.mimeSubtype";
-	public static final String KEY_CHARSET      = "agapsys.mail.charset";
-	public static final String KEY_IGNORE_TEST  = "agapsys.mail.ignoreTest";
-	
-	public static final String RECIPIENT_DELIMITER = ",";
-	
-	private static final File HOME_FOLDER = new File(System.getProperty("user.home"));
-	private static final File SETTINGS_FILE = new File(HOME_FOLDER, ".smtp-sender-test.conf");
-	// =========================================================================
-	
-	// INSTANCE SCOPE ==========================================================
-	private final SmtpSettings settings;
-	private final String       sender;
-	private final String[]     recipients;
-	private final String       subject;
-	private final String       text;
-	private final String       mime;
-	private final String       charset;
-	private final boolean      ignoreTest;
-	
-	private void throwMissingProperty(String key) {
-		throw new IllegalStateException("Missing property: " + key);
-	}
-	
-	public SmtpSenderTest() throws IOException {
-		if (!SETTINGS_FILE.exists())
-			throw new FileNotFoundException("Missing settings file: " + SETTINGS_FILE.getAbsolutePath());
-		
-		try (FileInputStream fis = new FileInputStream(SETTINGS_FILE)) {
-			Properties props = new Properties();
-			props.load(fis);
-			settings = new SmtpSettings(props);
-			
-			String property;
-			
-			// Sender...
-			property = props.getProperty(KEY_SENDER, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_SENDER);
-			
-			sender = property.trim();
-			
-			// Recipients...
-			property = props.getProperty(KEY_RECIPIENTS, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_RECIPIENTS);
-			
-			property = property.trim();
-			recipients = property.split(RECIPIENT_DELIMITER);
-			for (int i = 0; i < recipients.length; i++) {
-				recipients[i] = recipients[i].trim();
-				if (recipients[i].trim().isEmpty())
-					throw new IllegalStateException("Empty recipient at index " + i);
-			}
-			
-			// Subject...
-			property = props.getProperty(KEY_SUBJECT, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_SUBJECT);
-			
-			subject = property.trim();
-			
-			// MIME...
-			property = props.getProperty(KEY_MIME_SUBTYPE, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_MIME_SUBTYPE);
-			
-			mime = property.trim();
-			
-			// Text...
-			property = props.getProperty(KEY_TEXT, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_TEXT);
-			
-			text = property.trim();
-			
-			// Charset...
-			property = props.getProperty(KEY_CHARSET, null);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_CHARSET);
-			
-			charset = property.trim();
-			
-			// Ignore test...
-			property = props.getProperty(KEY_IGNORE_TEST);
-			if (property == null || property.trim().isEmpty())
-				throwMissingProperty(KEY_IGNORE_TEST);
-			
-			ignoreTest = Boolean.parseBoolean(property.trim());
-		}
-	}
-	
-	@Test
-	public void sendMessage() throws AddressException, MessagingException {
-		if (!ignoreTest) {
-			SmtpSender smtpSender = new SmtpSender(settings);
-			Message message = new MessageBuilder(sender, recipients).setMimeSubtype(mime).setCharset(charset).setSubject(subject).setText(text).build();
-			smtpSender.sendMessage(message);
-		} else {
-			System.out.println("=== WARNING: Test was ignored in settings ===");
-		}
-	}
-	// =========================================================================
+    // CLASS SCOPE =============================================================
+    public static final String KEY_SENDER       = "agapsys.mail.sender";
+    public static final String KEY_RECIPIENTS   = "agapsys.mail.recipients";
+    public static final String KEY_SUBJECT      = "agapsys.mail.subject";
+    public static final String KEY_TEXT         = "agapsys.mail.text";
+    public static final String KEY_MIME_SUBTYPE = "agapsys.mail.mimeSubtype";
+    public static final String KEY_CHARSET      = "agapsys.mail.charset";
+    public static final String KEY_IGNORE_TEST  = "agapsys.mail.ignoreTest";
+    
+    public static final String RECIPIENT_DELIMITER = ",";
+    
+    private static final File HOME_FOLDER = new File(System.getProperty("user.home"));
+    private static final File SETTINGS_FILE = new File(HOME_FOLDER, ".smtp-sender-test.conf");
+    // =========================================================================
+    
+    // INSTANCE SCOPE ==========================================================
+    private final SmtpSettings settings;
+    private final String       sender;
+    private final String[]     recipients;
+    private final String       subject;
+    private final String       text;
+    private final String       mime;
+    private final String       charset;
+    private final boolean      ignoreTest;
+    
+    private void throwMissingProperty(String key) {
+        throw new IllegalStateException("Missing property: " + key);
+    }
+    
+    public SmtpSenderTest() throws IOException {
+        if (!SETTINGS_FILE.exists())
+            throw new FileNotFoundException("Missing settings file: " + SETTINGS_FILE.getAbsolutePath());
+        
+        try (FileInputStream fis = new FileInputStream(SETTINGS_FILE)) {
+            Properties props = new Properties();
+            props.load(fis);
+            settings = new SmtpSettings(props);
+            
+            String property;
+            
+            // Sender...
+            property = props.getProperty(KEY_SENDER, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_SENDER);
+            
+            sender = property.trim();
+            
+            // Recipients...
+            property = props.getProperty(KEY_RECIPIENTS, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_RECIPIENTS);
+            
+            property = property.trim();
+            recipients = property.split(RECIPIENT_DELIMITER);
+            for (int i = 0; i < recipients.length; i++) {
+                recipients[i] = recipients[i].trim();
+                if (recipients[i].trim().isEmpty())
+                    throw new IllegalStateException("Empty recipient at index " + i);
+            }
+            
+            // Subject...
+            property = props.getProperty(KEY_SUBJECT, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_SUBJECT);
+            
+            subject = property.trim();
+            
+            // MIME...
+            property = props.getProperty(KEY_MIME_SUBTYPE, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_MIME_SUBTYPE);
+            
+            mime = property.trim();
+            
+            // Text...
+            property = props.getProperty(KEY_TEXT, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_TEXT);
+            
+            text = property.trim();
+            
+            // Charset...
+            property = props.getProperty(KEY_CHARSET, null);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_CHARSET);
+            
+            charset = property.trim();
+            
+            // Ignore test...
+            property = props.getProperty(KEY_IGNORE_TEST);
+            if (property == null || property.trim().isEmpty())
+                throwMissingProperty(KEY_IGNORE_TEST);
+            
+            ignoreTest = Boolean.parseBoolean(property.trim());
+        }
+    }
+    
+    @Test
+    public void sendMessage() throws AddressException, MessagingException {
+        if (!ignoreTest) {
+            SmtpSender smtpSender = new SmtpSender(settings);
+            Message message = new MessageBuilder(sender, recipients).setMimeSubtype(mime).setCharset(charset).setSubject(subject).setText(text).build();
+            smtpSender.sendMessage(message);
+        } else {
+            System.out.println("=== WARNING: Test was ignored in settings ===");
+        }
+    }
+    // =========================================================================
 }
