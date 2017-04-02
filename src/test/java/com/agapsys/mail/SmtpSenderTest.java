@@ -42,22 +42,24 @@ public class SmtpSenderTest {
     // =========================================================================
     
     // INSTANCE SCOPE ==========================================================
-    private final SmtpSettings settings;
-    private final String       sender;
-    private final String[]     recipients;
-    private final String       subject;
-    private final String       text;
-    private final String       mime;
-    private final String       charset;
-    private final boolean      ignoreTest;
+    private SmtpSettings settings;
+    private String       sender;
+    private String[]     recipients;
+    private String       subject;
+    private String       text;
+    private String       mime;
+    private String       charset;
+    private boolean      ignoreTest;
     
     private void throwMissingProperty(String key) {
         throw new IllegalStateException("Missing property: " + key);
     }
     
     public SmtpSenderTest() throws IOException {
-        if (!SETTINGS_FILE.exists())
-            throw new FileNotFoundException("Missing settings file: " + SETTINGS_FILE.getAbsolutePath());
+        if (!SETTINGS_FILE.exists()) {
+            ignoreTest = true;
+            return;
+        }
         
         try (FileInputStream fis = new FileInputStream(SETTINGS_FILE)) {
             Properties props = new Properties();
