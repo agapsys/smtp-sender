@@ -84,8 +84,8 @@ public class MessageBuilder {
         if (this.subject != null)
             throw new IllegalStateException("Subject is already set");
 
-        if (subject == null || subject.trim().isEmpty())
-            throw new IllegalArgumentException("Null/Empty subject");
+        if (subject == null)
+            subject = "";
 
         this.subject = subject.trim();
         return this;
@@ -95,8 +95,8 @@ public class MessageBuilder {
         if (this.text != null)
             throw new IllegalStateException("Text is already set");
 
-        if (text == null || text.trim().isEmpty())
-            throw new IllegalArgumentException("Null/Empty text");
+        if (text == null)
+            text = "";
 
         this.text = text;
         return this;

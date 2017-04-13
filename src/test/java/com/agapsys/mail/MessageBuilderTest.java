@@ -130,14 +130,25 @@ public class MessageBuilderTest {
         testBuilder.setSubject("hello").setSubject("world");
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullSubject() {
-        Message message = testBuilder.setSubject(null).build();
+        testBuilder.setSubject(null).build();
+        
+        Throwable t = null;
+        before(); // <-- resets testBuilder
+        testBuilder.setSubject(null);
+        try {
+            testBuilder.setSubject(null);
+        } catch (IllegalStateException error) {
+            t = error;
+        }
+        Assert.assertNotNull(t);
+        Assert.assertTrue("Subject is already set".equals(t.getMessage()));
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testEmptySubject() {
-        Message message = testBuilder.setSubject("").build();
+        testBuilder.setSubject("").build();
     }
     
     // Text --------------------------------------------------------------------
@@ -157,14 +168,25 @@ public class MessageBuilderTest {
         testBuilder.setText("hello").setText("world");
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullText() {
-        Message message = testBuilder.setText(null).build();
+        testBuilder.setText(null).build();
+        
+        Throwable t = null;
+        before(); // <-- resets testBuilder
+        testBuilder.setText(null);
+        try {
+            testBuilder.setText(null);
+        } catch (IllegalStateException error) {
+            t = error;
+        }
+        Assert.assertNotNull(t);
+        Assert.assertTrue("Text is already set".equals(t.getMessage()));
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testEmptyText() {
-        Message message = testBuilder.setText("").build();
+        testBuilder.setText("").build();
     }
     
     // Charset -----------------------------------------------------------------
